@@ -1,5 +1,6 @@
 package net.blockteller.tradetown.entity.custom;
 
+import net.blockteller.tradetown.menu.CustomMerchantMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
@@ -31,6 +32,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.OptionalInt;
 
 public class NewVillagerEntity extends PathfinderMob implements Merchant {
     public NewVillagerEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
@@ -154,16 +157,24 @@ public class NewVillagerEntity extends PathfinderMob implements Merchant {
             this.tradingPlayer = player;
 
             player.sendSystemMessage(Component.literal("Opening trading menu with " + this.getDisplayName().getString()));
-            player.openMenu(new SimpleMenuProvider(
-                    (windowId, playerInventory, playerEntity) -> new MerchantMenu(windowId, playerInventory, this),
-                    Component.literal("Trading with " + this.getDisplayName().getString())
-            ));
+            this.openTradingScreen(player, this.getDisplayName(), 1);
         } else {
             player.sendSystemMessage(Component.literal("Menu is already open"));
         }
     }
+    @Override
+    public void openTradingScreen(Player player, Component displayName, int level) {
+        OptionalInt optionalint = player.openMenu(new SimpleMenuProvider((p_45298_, p_45299_, p_45300_) -> {
+            return new CustomMerchantMenu(p_45298_, p_45299_, this);
+        }, displayName));
+        if (optionalint.isPresent()) {
+            MerchantOffers merchantoffers = this.getOffers();
+            if (!merchantoffers.isEmpty()) {
+                player.sendMerchantOffers(optionalint.getAsInt(), merchantoffers, level, this.getVillagerXp(), this.showProgressBar(), this.canRestock());
+            }
+        }
 
-
+    }
 
     @Nullable
     private Player tradingPlayer;
