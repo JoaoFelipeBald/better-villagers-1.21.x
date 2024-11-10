@@ -1,5 +1,13 @@
 package net.blockteller.tradetown;
 
+import net.blockteller.tradetown.block.ModBlocks;
+import net.blockteller.tradetown.entity.ModEntities;
+import net.blockteller.tradetown.entity.client.NewVillagerRenderer;
+import net.blockteller.tradetown.item.ModCreativeModeTabs;
+import net.blockteller.tradetown.item.ModItems;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.world.item.CreativeModeTabs;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -18,8 +26,8 @@ import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
-@Mod(tradetown.MOD_ID)
-public class tradetown
+@Mod(TradeTown.MOD_ID)
+public class TradeTown
 {
     // Define mod id in a common place for everything to reference
     public static final String MOD_ID = "tradetown";
@@ -28,7 +36,7 @@ public class tradetown
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
-    public tradetown(IEventBus modEventBus, ModContainer modContainer)
+    public TradeTown(IEventBus modEventBus, ModContainer modContainer)
     {
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
@@ -40,8 +48,13 @@ public class tradetown
         // Do not add this line if there are no @SubscribeEvent-annotated functions in this class, like onServerStarting() below.
         NeoForge.EVENT_BUS.register(this);
 
+        ModCreativeModeTabs.register(modEventBus);
+        ModItems.register(modEventBus);
+        ModBlocks.register(modEventBus);
+        ModEntities.register(modEventBus);
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
+
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
@@ -54,7 +67,12 @@ public class tradetown
     // Add the example block item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event)
     {
-
+        if(event.getTabKey() == CreativeModeTabs.INGREDIENTS){
+            event.accept(ModItems.EXAMPLEITEM);
+        }
+        if(event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+            event.accept(ModBlocks.EXAMPLE_BLOCK);
+        }
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
@@ -70,6 +88,7 @@ public class tradetown
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event)
         {
+
         }
     }
 }

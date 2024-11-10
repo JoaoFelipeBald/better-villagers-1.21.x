@@ -1,0 +1,18 @@
+{
+  "item.tradetown.example_item": "Exampleitem",
+  "item.tradetown.custom_item": "Custom Item",
+
+  "item.tradetown.radish": "Radish",
+  "item.tradetown.frostfire_ice": "Frostfire Ice",
+  "item.tradetown.starlight_ashes": "Starlight Ashes",
+
+
+  "block.tradetown.example_block": "Exampleblock",
+  "block.tradetown.magic_block": "Magic Block",
+
+  "creativetab.tradetown.example_tab": "Example Tab",
+  "creativetab.tradetown.example_tab2": "Example Tab2",
+
+  "tooltip.tradetown.magic_block.tooltip": "Description",
+  "tooltip.tradetown.radish.tooltip": "Description"
+}
